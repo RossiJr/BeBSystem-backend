@@ -1,0 +1,13 @@
+package org.rossijr.bebsystem;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class BeBSystemApplicationTests {
+
+    @Test
+    void contextLoads() {
+    }
+
+}
