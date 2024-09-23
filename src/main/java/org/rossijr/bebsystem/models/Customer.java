@@ -1,6 +1,6 @@
 package org.rossijr.bebsystem.models;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -18,10 +18,10 @@ public class Customer implements Serializable {
     @Column(name = "ID", updatable = false, nullable = false, unique = true)
     private UUID id;
 
-    @Column(name = "FIRST_NAME", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "FIRST_NAME", columnDefinition = "TEXT")
     private String firstName;
 
-    @Column(name = "LAST_NAME", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "LAST_NAME", columnDefinition = "TEXT")
     private String lastName;
 
     @Column(name = "EMAIL", nullable = false, columnDefinition = "TEXT")
@@ -37,12 +37,16 @@ public class Customer implements Serializable {
     @Column(name = "CREATED_AT", columnDefinition = "TIMESTAMP")
     private Calendar createdAt;
 
-    @JsonManagedReference
+    @JsonIgnore
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<Reservation> reservations;
 
 
     public Customer() {
+    }
+
+    public Customer(UUID id) {
+        this.id = id;
     }
 
     public UUID getId() {

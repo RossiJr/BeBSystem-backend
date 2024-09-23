@@ -1,6 +1,7 @@
 package org.rossijr.bebsystem.enums;
 
 public enum RoomStatus {
+    CREATED,
     AVAILABLE,
     OCCUPIED,
     RESERVED,

@@ -1,6 +1,8 @@
 package org.rossijr.bebsystem.models;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.rossijr.bebsystem.enums.AccommodationStatus;
@@ -27,8 +29,9 @@ public class Accommodation implements Serializable {
     @OneToMany(mappedBy = "accommodation", cascade = CascadeType.ALL)
     private List<Room> rooms;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "accommodation", cascade = CascadeType.ALL)
+
+    @JsonIgnore
+    @Transient
     private List<Reservation> reservations;
 
     @Column(name = "EMAIL", columnDefinition = "TEXT")
@@ -37,18 +40,23 @@ public class Accommodation implements Serializable {
     @Column(name = "PHONE_NUMBER", columnDefinition = "TEXT")
     private String phoneNumber;
 
-    @Column(name = "STATUS", columnDefinition = "TEXT")
+    @Enumerated(EnumType.STRING) @Column(name = "STATUS")
     private AccommodationStatus status;
 
     @Column(name = "CREATED_AT", columnDefinition = "TIMESTAMP")
     private Calendar createdAt;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "CREATED_BY")
     private User createdBy;
 
 
     public Accommodation() {
+    }
+
+    public Accommodation(UUID id) {
+        this.id = id;
     }
 
     public UUID getId() {

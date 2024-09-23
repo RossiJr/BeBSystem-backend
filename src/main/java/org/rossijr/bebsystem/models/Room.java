@@ -7,6 +7,7 @@ import org.rossijr.bebsystem.enums.RoomCategory;
 import org.rossijr.bebsystem.enums.RoomStatus;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.UUID;
 
 @Entity
@@ -38,8 +39,15 @@ public class Room implements Serializable {
     @Column(name = "STATUS")
     private RoomStatus status;
 
+    @Column(name = "CREATED_AT", columnDefinition = "TIMESTAMP")
+    private Calendar createdAt;
+
 
     public Room() {
+    }
+
+    public Room(UUID id) {
+        this.id = id;
     }
 
     public UUID getId() {
@@ -88,5 +96,13 @@ public class Room implements Serializable {
 
     public void setStatus(RoomStatus status) {
         this.status = status;
+    }
+
+    public Calendar getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Calendar createdAt) {
+        this.createdAt = createdAt;
     }
 }

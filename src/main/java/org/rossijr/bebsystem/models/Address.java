@@ -43,6 +43,17 @@ public class Address implements Serializable {
     @Enumerated(EnumType.STRING)
     private AddressType addressType;
 
+    @OneToOne(mappedBy = "address")
+    private Customer tbCustomer;
+
+    public Customer getTbCustomer() {
+        return tbCustomer;
+    }
+
+    public void setTbCustomer(Customer tbCustomer) {
+        this.tbCustomer = tbCustomer;
+    }
+
 
     public Address() {
     }

@@ -1,13 +1,13 @@
 package org.rossijr.bebsystem.models;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import org.rossijr.bebsystem.enums.ReservationCompany;
 import org.rossijr.bebsystem.enums.ReservationStatus;
 
 import java.io.Serializable;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,17 +16,17 @@ import java.util.UUID;
 public class Reservation implements Serializable {
     private static final long serialVersionUID = 1L;
 
-
     @Id
     @GeneratedValue(generator = "UUID")
     @Column(name = "ID", updatable = false, nullable = false, unique = true)
     private UUID id;
 
-    @JoinColumn(name = "COSTUMER_ID")
+    @JsonManagedReference
+    @JoinColumn(name = "CUSTOMER_ID")
     @ManyToOne
-    @JsonBackReference
-    private Customer costumer;
+    private Customer customer;
 
+    @JsonManagedReference
     @ManyToMany
     @JoinTable(
             name = "tb_mm_reservation_room",
@@ -35,7 +35,7 @@ public class Reservation implements Serializable {
     )
     private List<Room> rooms;
 
-    @Column(name = "STATUS", columnDefinition = "TEXT")
+    @Enumerated(EnumType.STRING) @Column(name = "STATUS")
     private ReservationStatus status;
 
     @Column(name = "NUMBER_OF_GUESTS", columnDefinition = "INTEGER")
@@ -47,7 +47,7 @@ public class Reservation implements Serializable {
     @Column(name = "CHECK_OUT", columnDefinition = "TIMESTAMP")
     private Calendar checkOut;
 
-    @Column(name = "TOTAL_COST", columnDefinition = "DOUBLE")
+    @Column(name = "TOTAL_COST")
     private Double totalCost;
 
     @Column(name = "CREATED_AT", columnDefinition = "TIMESTAMP")
@@ -62,6 +62,12 @@ public class Reservation implements Serializable {
     @Column(name = "ADDITIONAL_REQUESTS", columnDefinition = "TEXT")
     private String additionalRequests;
 
+    @Column(name = "RESERVATION_CODE", columnDefinition = "TEXT")
+    private String reservationCode;
+
+    @Enumerated(EnumType.STRING) @Column(name = "RESERVATION_COMPANY")
+    private ReservationCompany reservationCompany;
+
 
     public Reservation() {
     }
@@ -74,12 +80,12 @@ public class Reservation implements Serializable {
         this.id = id;
     }
 
-    public Customer getCostumer() {
-        return costumer;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setCostumer(Customer costumer) {
-        this.costumer = costumer;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
     public List<Room> getRooms() {
@@ -160,5 +166,21 @@ public class Reservation implements Serializable {
 
     public void setAdditionalRequests(String additionalRequests) {
         this.additionalRequests = additionalRequests;
+    }
+
+    public String getReservationCode() {
+        return reservationCode;
+    }
+
+    public void setReservationCode(String reservationCode) {
+        this.reservationCode = reservationCode;
+    }
+
+    public ReservationCompany getReservationCompany() {
+        return reservationCompany;
+    }
+
+    public void setReservationCompany(ReservationCompany reservationCompany) {
+        this.reservationCompany = reservationCompany;
     }
 }
