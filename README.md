@@ -1,9 +1,9 @@
 # B&B System
 
 **This is the repository of the back-end for B&B System, a system which manages reservations for Bed and Breakfast businesses.
-Along this repository, is possible to find the endpoints (APIs) that handle user authentication, reservation management and room availability tracking.
+Along this repository, is possible to find the endpoints (APIs) that handle user authentication, reservation management and room availability tracking.**
 
-(Soon inventory systems will be also available)**
+**(Soon inventory systems will be also available)**
 
 ![GitHub license](https://img.shields.io/github/license/RossiJr/BeBSystem-backend)
 
