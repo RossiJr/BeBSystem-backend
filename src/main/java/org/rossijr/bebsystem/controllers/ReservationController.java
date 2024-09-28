@@ -7,6 +7,7 @@ import org.rossijr.bebsystem.models.Reservation;
 import org.rossijr.bebsystem.models.Room;
 import org.rossijr.bebsystem.models.User;
 import org.rossijr.bebsystem.services.ReservationService;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/v1/reservations")
 public class ReservationController {
+    Logger logger = org.slf4j.LoggerFactory.getLogger(ReservationController.class);
 
     @Autowired
     private ReservationService reservationService;
@@ -67,8 +69,10 @@ public class ReservationController {
 
             return ResponseEntity.ok(reservations);
         } catch (InsufficientAuthenticationException | BadCredentialsException e) {
+            logger.warn("Unauthorized access attempt to reservations: {{}}", e.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         } catch (Exception e) {
+            logger.error("An error occurred while retrieving reservations: {{}}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while retrieving reservations.");
         }
     }
@@ -96,12 +100,17 @@ public class ReservationController {
             reservation.setReservationCode(reservationVO.getReservationCode());
             reservation.setReservationCompany(reservationVO.getReservationCompany());
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(reservationService.createReservation(reservation));
+            Reservation createdReservation = reservationService.createReservation(reservation);
+
+            logger.info("User {{}} created a reservation with id {{}}", user.getId(), createdReservation.getId());
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdReservation);
         } catch (InsufficientAuthenticationException | BadCredentialsException e) {
+            logger.warn("Unauthorized access attempt to create reservation: {{}}", e.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
+            logger.error("An error occurred while creating the reservation: {{}}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while creating the reservation.");
         }
     }

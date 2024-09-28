@@ -19,7 +19,7 @@ public class Role implements Serializable, GrantedAuthority {
     @Column(unique = true, nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Set<UserRole> userRoles = new HashSet<>();
 
     @Column(name = "description")
@@ -34,6 +34,11 @@ public class Role implements Serializable, GrantedAuthority {
     }
 
     public Role() {
+    }
+
+    public Role(Long id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     public Long getId() {
@@ -58,5 +63,21 @@ public class Role implements Serializable, GrantedAuthority {
 
     public void setUserRoles(Set<UserRole> userRoles) {
         this.userRoles = userRoles;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Calendar getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Calendar createdAt) {
+        this.createdAt = createdAt;
     }
 }

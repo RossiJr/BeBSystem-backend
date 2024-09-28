@@ -5,6 +5,7 @@ import org.rossijr.bebsystem.authentication.AuthUtil;
 import org.rossijr.bebsystem.models.Accommodation;
 import org.rossijr.bebsystem.models.User;
 import org.rossijr.bebsystem.services.AccommodationService;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,8 @@ import java.util.ArrayList;
 @RestController
 @RequestMapping("/api/v1/accommodations")
 public class AccommodationController {
+    Logger logger = org.slf4j.LoggerFactory.getLogger(AccommodationController.class);
+
     @Autowired
     private AccommodationService accommodationService;
     @Autowired
@@ -44,13 +47,15 @@ public class AccommodationController {
             response.setPhoneNumber(createdAccommodation.getPhoneNumber());
             response.setStatus(createdAccommodation.getStatus());
 
+            logger.info("User {{}} created accommodation with id: {{}}", user.getId(), createdAccommodation.getId());
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
-
         } catch (InsufficientAuthenticationException | BadCredentialsException e) {
+            logger.warn("Unauthorized access attempt to create accommodation: {{}}", e.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
+            logger.error("An error occurred while creating the accommodation: {{}}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while retrieving reservations.");
         }
     }
