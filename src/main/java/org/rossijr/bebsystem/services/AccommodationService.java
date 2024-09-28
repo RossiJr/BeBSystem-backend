@@ -49,19 +49,19 @@ public class AccommodationService {
         if (accommodation.getCreatedBy() == null){
             throw new IllegalArgumentException("The user who created the accommodation cannot be null");
         }
-        if (accommodation.getName() == null || accommodation.getName().isEmpty()) {
+        if (accommodation.getName() == null || accommodation.getName().isBlank()) {
             throw new IllegalArgumentException("The accommodation name cannot be null or empty");
         }
         if (!isUniqueName(accommodation.getName().trim(), accommodation.getCreatedBy())) {
             throw new IllegalArgumentException("This accommodation name is already in use");
         }
-        if(accommodation.getEmail() != null && !accommodation.getEmail().isEmpty() && !Utils.isValidEmail(accommodation.getEmail())){
+        if(accommodation.getEmail() != null && !accommodation.getEmail().isEmpty() && !Utils.isValidEmail(accommodation.getEmail().trim())){
             throw new IllegalArgumentException("The email needs to be valid");
         }
 
         Accommodation obj = new Accommodation();
         obj.setName(accommodation.getName().trim());
-        obj.setEmail(accommodation.getEmail());
+        obj.setEmail(accommodation.getEmail().trim());
         obj.setPhoneNumber(accommodation.getPhoneNumber() == null ? null : Utils.cleanPhoneNumber(accommodation.getPhoneNumber()));
         obj.setStatus(AccommodationStatus.CREATED);
         obj.setCreatedAt(Calendar.getInstance());
