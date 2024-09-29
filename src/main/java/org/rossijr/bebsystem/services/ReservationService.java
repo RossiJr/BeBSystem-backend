@@ -1,5 +1,6 @@
 package org.rossijr.bebsystem.services;
 
+import org.rossijr.bebsystem.Utils;
 import org.rossijr.bebsystem.enums.ReservationStatus;
 import org.rossijr.bebsystem.models.Reservation;
 import org.rossijr.bebsystem.repositories.ReservationRepository;
@@ -27,19 +28,41 @@ public class ReservationService {
     }
 
     public Reservation createReservation(Reservation reservation) {
+        if (reservation == null) {
+            throw new IllegalArgumentException("Reservation cannot be null.");
+        }
+        if (reservation.getCustomer() == null || reservation.getCustomer().getId() == null){
+            throw new IllegalArgumentException("Customer must be provided.");
+        }
         if (reservation.getRooms() == null || reservation.getRooms().isEmpty()) {
             throw new IllegalArgumentException("At least one room must be selected.");
         }
         if (reservation.getCheckIn() == null || reservation.getCheckOut() == null) {
             throw new IllegalArgumentException("Check-in and check-out dates must be provided.");
         }
+        if(Utils.isSameDate(reservation.getCheckIn(), reservation.getCheckOut())){
+            throw new IllegalArgumentException("Check-out date must be at 1 least one day after check-in date.");
+        }
         if (reservation.getCheckIn().after(reservation.getCheckOut())) {
             throw new IllegalArgumentException("Check-out date must be after check-in date.");
         }
 
-        reservation.setStatus(reservation.getStatus() == null ? ReservationStatus.PENDING : reservation.getStatus());
-        reservation.setCreatedAt(Calendar.getInstance());
+        Reservation obj = new Reservation();
 
-        return reservationRepository.save(reservation);
+        obj.setRooms(reservation.getRooms());
+        obj.setCustomer(reservation.getCustomer());
+        obj.setStatus(reservation.getStatus() == null ? ReservationStatus.PENDING : reservation.getStatus());
+        obj.setNumberOfGuests(reservation.getNumberOfGuests());
+        obj.setCheckIn(reservation.getCheckIn());
+        obj.setCheckOut(reservation.getCheckOut());
+        obj.setTotalCost(reservation.getTotalCost());
+        obj.setCreatedAt(Calendar.getInstance());
+        obj.setPayedAt(reservation.getPayedAt());
+        obj.setAdditionalInfo(reservation.getAdditionalInfo());
+        obj.setAdditionalRequests(reservation.getAdditionalRequests());
+        obj.setReservationCode(reservation.getReservationCode());
+        obj.setReservationCompany(reservation.getReservationCompany());
+
+        return reservationRepository.save(obj);
     }
 }
