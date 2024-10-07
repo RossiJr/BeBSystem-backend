@@ -39,8 +39,13 @@ public class RoomController {
                 logger.warn("User {{}} tried to create a room in accommodation {{}} that he does not own", user.getId(), accommodation.getId());
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not allowed to create a room in this accommodation");
             }
+            Room newRoom = new Room();
+            newRoom.setName(room.getName());
+            newRoom.setAccommodation(new Accommodation(room.getAccommodationId()));
+            newRoom.setCapacity(room.getCapacity());
+            newRoom.setCategory(room.getCategory());
 
-            Room newRoom = roomService.createRoom(room);
+            newRoom = roomService.createRoom(newRoom);
 
             logger.info("User {{}} created room with id {{}}", user.getId(), newRoom.getId());
             return ResponseEntity.status(HttpStatus.CREATED).body(newRoom);

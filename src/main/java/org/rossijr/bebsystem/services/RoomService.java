@@ -17,25 +17,30 @@ import java.util.stream.Collectors;
 public class RoomService {
     @Autowired
     private RoomRepository roomRepository;
+    @Autowired
+    private AccommodationService accommodationService;
 
-    public Room createRoom(RoomVO room) {
+    public Room createRoom(Room room) {
         if (room == null) {
             throw new IllegalArgumentException("Room cannot be null");
         }
-        if (room.getName() == null || room.getName().isEmpty()) {
+        if (room.getName() == null || room.getName().isBlank()) {
             throw new IllegalArgumentException("Room name cannot be null or empty");
         }
-        if (room.getAccommodationId() == null) {
+        if (room.getAccommodation() == null || room.getAccommodation().getId() == null) {
             throw new IllegalArgumentException("Accommodation cannot be null");
         }
-        if (roomRepository.findByNameAndAccommodation_Id(room.getName(), room.getAccommodationId()) != null) {
+        if (accommodationService.getAccommodationById(room.getAccommodation().getId()) == null) {
+            throw new IllegalArgumentException("Accommodation not found");
+        }
+        if (roomRepository.findByNameAndAccommodation_Id(room.getName(), room.getAccommodation().getId()) != null) {
             throw new IllegalArgumentException("Room {" + room.getName() + "} already exists in this accommodation");
         }
 
         Room obj = new Room();
         obj.setName(room.getName());
-        obj.setAccommodation(new Accommodation(room.getAccommodationId()));
-        obj.setCapacity(room.getCapacity());
+        obj.setAccommodation(new Accommodation(room.getAccommodation().getId()));
+        obj.setCapacity(room.getCapacity() != null ? room.getCapacity() : 1);
         obj.setCategory(room.getCategory() != null ? room.getCategory() : RoomCategory.NON_DEFINED);
         obj.setStatus(RoomStatus.CREATED);
         obj.setCreatedAt(Calendar.getInstance());

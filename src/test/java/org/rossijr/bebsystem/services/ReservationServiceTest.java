@@ -1,13 +1,10 @@
 package org.rossijr.bebsystem.services;
 
-import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.rossijr.bebsystem.Utils;
 import org.rossijr.bebsystem.enums.ReservationStatus;
 import org.rossijr.bebsystem.models.Customer;
 import org.rossijr.bebsystem.models.Reservation;
@@ -18,12 +15,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class ReservationServiceTest {
