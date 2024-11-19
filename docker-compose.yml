@@ -1,0 +1,28 @@
+version: '3.8'
+
+# This is the main configuration file for Docker Compose, but the sensitive information is not included here.
+# You should create an .env file in the same directory as this file and include the sensitive information there.
+
+
+services:
+  backend:
+    build:
+      context: ./ # Path to your backend Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL} # Prod PostgreSQL URL
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME} # Prod PostgreSQL username
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD} # Prod PostgreSQL password
+  database:
+    image: postgres:17 # Use the official PostgreSQL image
+    ports:
+      - ${POSTGRES_PORT_HOST}:5432
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB} # Prod PostgreSQL database name
+      POSTGRES_USER: ${POSTGRES_USER} # Prod PostgreSQL username
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} # Prod PostgreSQL password
+    volumes:
+      - ${POSTGRES_DATAPATH_HOST}:${POSTGRES_DATAPATH_CONTAINER} # Persist PostgreSQL data
+    restart: always
